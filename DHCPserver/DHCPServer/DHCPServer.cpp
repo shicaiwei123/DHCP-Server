@@ -1,13 +1,11 @@
 
 //#include <cstdio>
-#include<iostream>
-using std::cout;
-using std::cin;
-using std::endl;
+
 #include <string.h>
 #include <memory.h>
 #include "SocketServer.h"
 #include "DHCPDataStruct.h"
+#include "DHCPPackageServer.h"
 #pragma comment(lib,"ws2_32.lib")
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
@@ -33,6 +31,7 @@ int main(int argc, char* argv[])
 	DHCPMessageStuct *DHCPMessage = &message;
 	memset(DHCPMessage, 0, sizeof(DHCPMessage));
 	memset(&messageTemp, 0, sizeof(messageTemp));
+	DHCPPackageServer serverPackage(DHCPMessage,DHCP_OFFER);
 	int err;
 	socketServer serverSocket;
 	err=serverSocket.begin();
@@ -80,6 +79,7 @@ int main(int argc, char* argv[])
 			//printf(revData);
 			memcpy(&message, revData, sizeof(revData));//把接收到的信息转换成结构体
 			messageTemp = message;
+			serverPackage.analysis(&messageTemp);
 		}
 
 		//发送数据

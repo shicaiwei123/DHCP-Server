@@ -1,5 +1,9 @@
 #pragma once
-#include <iostream>
+#include<iostream>
+#include <iomanip>
+using std::cout;
+using std::cin;
+using std::endl;
 
 union Address
 {
