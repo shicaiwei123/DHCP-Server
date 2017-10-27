@@ -1,14 +1,23 @@
 //#include "stdafx.h"
 #include <STDIO.H>
 #include "SocketClient.h"
+#include "DHCPPackageClient.h"
+#pragma comment(lib,"netapi32.lib")    //连接Netapi32.lib库，MAC获取中用到了NetApi32.DLL的功能  
 #pragma comment(lib,"ws2_32.lib")
 #include <iostream>
 using std::cout;
 using std::cin;
 using std::endl;
+#include <string>
+using std::string;
 
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
+
+//全局变量，缓存收到的报文数据。
+DHCPMessageStuct measseageTemp;
+
+
 const char ip[] = {"127.0.0.1" };
 
 //#define structTest
@@ -27,17 +36,21 @@ typedef struct send_info
 
 
 
-
 int main(int argc, char* argv[])
 {
-	char send_buf[1024];
+	char send_buf[2048];
+	DHCPMessageStuct meassage;
+	memset(&meassage, 0, sizeof(meassage));
+	DHCPPackageClient clientPacket(&meassage, DHCP_DISCOVER);
+	clientPacket.package();
+	memcpy(send_buf, &meassage, sizeof(meassage)); //结构体转换成字符串
 	socketClient socketClinet;
 	socketClinet.begin();
 	socketClinet.socketCreate(TCP);
 	socketClinet.socketConnect(ip, 8888);
 
 #ifdef structTest
-		send_info info1 = {"client","server","你好啊，李银河",15}; //定义结构体变量
+	send_info info1 = {"client","server","你好啊，李银河",15}; //定义结构体变量
 	send_info info2;
 	memset(send_buf, 0, 1024);//清空发送缓存，不清空的话可能导致接收时产生乱码，//或者如果本次发送的内容少于上次的话，snd_buf中会包含有上次的内容 
 	printf("%s\n", info1.info_from);
@@ -56,17 +69,16 @@ int main(int argc, char* argv[])
 #endif // structTest
 
 	SOCKET sclient = socketClinet.socketGet();
-	char * sendData = "你好,TCP服务端，我是客户端!\n";
-	send(sclient, sendData, strlen(sendData), 0);
+	send(sclient, send_buf, sizeof(send_buf), 0);
+	//char * sendData = "你好,TCP服务端，我是客户端!\n";
+	//send(sclient, sendData, strlen(sendData), 0);
 
-	char recData[1024];
-	int ret = recv(sclient, recData, 1024, 0);
+	char recData[2048];
+	int ret = recv(sclient, recData, sizeof(recData), 0);
 	if (ret > 0)
 	{
 		recData[ret] = 0x00;
 		printf(recData);
-
-	
 	}
 	closesocket(sclient);
 	WSACleanup();

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\DHCPC.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="DHCPclient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -27,12 +24,30 @@
     <ClCompile Include="sokecBasis.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DHCPC.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DHCPPackageClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DHCPPackageBasic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SocketBasic.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SocketClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPDataStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPPackageBasic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPPackageClient.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
