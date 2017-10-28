@@ -146,6 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DHCPPackageBasic.cpp" />
+    <ClCompile Include="DHCPPackageServer.cpp" />
     <ClCompile Include="DHCPS.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -155,6 +157,9 @@
     <ClCompile Include="sokectBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DHCPDataStruct.h" />
+    <ClInclude Include="DHCPPackageBasic.h" />
+    <ClInclude Include="DHCPPackageServer.h" />
     <ClInclude Include="SocketBasic.h" />
     <ClInclude Include="SocketServer.h" />
   </ItemGroup>

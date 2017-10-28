@@ -27,12 +27,27 @@
     <ClCompile Include="sokectBasic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DHCPPackageBasic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DHCPPackageServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SocketBasic.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SocketServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPDataStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPPackageBasic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPPackageServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

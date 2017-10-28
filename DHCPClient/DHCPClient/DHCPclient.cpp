@@ -1,11 +1,9 @@
 //#include "stdafx.h"
 #include <STDIO.H>
 #include "SocketClient.h"
+#include"DHCPPackageClient.h"
 #pragma comment(lib,"ws2_32.lib")
-#include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
+
 
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
@@ -30,12 +28,20 @@ typedef struct send_info
 
 int main(int argc, char* argv[])
 {
-	char send_buf[1024];
+	char sendData[1024];
+	char recvData[4096];
+	DHCPMessageStuct sendMessage;
+	DHCPMessageStuct recvMessage;
+	DHCPMessageStuct tempMesage;
+	DHCPPackageClient packageClient(&sendMessage);
+	packageClient.package(&sendMessage,DHCP_DISCOVER);
+	memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
+
 	socketClient socketClinet;
 	socketClinet.begin();
 	socketClinet.socketCreate(TCP);
 	socketClinet.socketConnect(ip, 8888);
-
+	SOCKET sclient = socketClinet.socketGet();
 #ifdef structTest
 		send_info info1 = {"client","server","你好啊，李银河",15}; //定义结构体变量
 	send_info info2;
@@ -54,17 +60,19 @@ int main(int argc, char* argv[])
 	//printf("%s\n", info2.info_content);
 	//printf("%d\n", info2.info_length);
 #endif // structTest
+	
 
-	SOCKET sclient = socketClinet.socketGet();
-	char * sendData = "你好,TCP服务端，我是客户端!\n";
-	send(sclient, sendData, strlen(sendData), 0);
+	//char * sendData = "你好,TCP服务端，我是客户端!\n";
+	send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
 
-	char recData[1024];
-	int ret = recv(sclient, recData, 1024, 0);
+
+	int ret = recv(sclient, recvData, 4096, 0);
 	if (ret > 0)
 	{
-		recData[ret] = 0x00;
-		printf(recData);
+		int l1 = strlen(recvData);
+		int l2 = sizeof(recvData);
+		recvData[ret] = 0x00;
+		printf(recvData);
 
 	
 	}
