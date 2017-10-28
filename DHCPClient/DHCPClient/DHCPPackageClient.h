@@ -6,9 +6,13 @@ public:
 	DHCPPackageClient(DHCPMessageStuct *Meassage);
 	int package(DHCPMessageStuct *Meassage, int MeassageType);
 	int addOption53(DHCPMessageStuct *Meassage, int MeassageType);
+	int analysis(DHCPMessageStuct *Meassage);
 	//ÖØÔØº¯Êı£¬·â×°
-	void package();
+	void package(DHCPMessageStuct *Meassage);
 	void addOption53();
+
+private:
+	DHCPMessageStuct *recvMessage;
 };
 
 

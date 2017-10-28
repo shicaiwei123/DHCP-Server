@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
 	char recvData[4096];
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
-	DHCPMessageStuct tempMesage;
+	DHCPMessageStuct tempMessage;
 	DHCPPackageClient packageClient(&sendMessage);
-	packageClient.package(&sendMessage,DHCP_DISCOVER);
+	packageClient.package(&sendMessage);
 	memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
 
 	socketClient socketClinet;
@@ -69,10 +69,11 @@ int main(int argc, char* argv[])
 	int ret = recv(sclient, recvData, 4096, 0);
 	if (ret > 0)
 	{
-		int l1 = strlen(recvData);
-		int l2 = sizeof(recvData);
-		recvData[ret] = 0x00;
-		printf(recvData);
+		//recvData[ret] = 0x00;
+		//printf(recvData);
+		memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
+		tempMessage = recvMessage;
+		packageClient.analysis(&tempMessage);
 
 	
 	}

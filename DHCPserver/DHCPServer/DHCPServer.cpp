@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
 {
 
 	char recvData[4096];
+	char sendData[2048];
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
@@ -85,8 +86,10 @@ int main(int argc, char* argv[])
 		}
 
 		//发送数据
-		char * sendData = "你好，TCP客户端！\n";
-		send(sClient, sendData, strlen(sendData), 0);
+		//char * sendData = "你好，TCP客户端！\n";
+		packageServer.package(&sendMessage,DHCP_OFFER);
+		memcpy(sendData, &sendMessage, sizeof(sendMessage)); //结构体转换成字符串
+		send(sClient, sendData, 2048, 0);
 		closesocket(sClient);
 	}
 	closesocket(slisten);
