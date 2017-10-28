@@ -5,11 +5,7 @@
 #pragma comment(lib,"netapi32.lib")    //连接Netapi32.lib库，MAC获取中用到了NetApi32.DLL的功能  
 #pragma comment(lib,"ws2_32.lib")
 #include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
-#include <string>
-using std::string;
+
 
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
@@ -38,12 +34,15 @@ typedef struct send_info
 
 int main(int argc, char* argv[])
 {
-	char send_buf[2048];
-	DHCPMessageStuct meassage;
-	memset(&meassage, 0, sizeof(meassage));
-	DHCPPackageClient clientPacket(&meassage, DHCP_DISCOVER);
+	char sendData[8192];
+	char recvData[8192];
+	DHCPMessageStuct sendMessage;
+	DHCPMessageStuct recvMessage;
+	DHCPMessageStuct tempMessage;
+	memset(&sendMessage, 0, sizeof(sendMessage));
+	DHCPPackageClient clientPacket(&sendMessage, DHCP_DISCOVER);
 	clientPacket.package();
-	memcpy(send_buf, &meassage, sizeof(meassage)); //结构体转换成字符串
+	memcpy(sendData, &sendMessage, sizeof(sendMessage)); //结构体转换成字符串
 	socketClient socketClinet;
 	socketClinet.begin();
 	socketClinet.socketCreate(TCP);
@@ -69,16 +68,19 @@ int main(int argc, char* argv[])
 #endif // structTest
 
 	SOCKET sclient = socketClinet.socketGet();
-	send(sclient, send_buf, sizeof(send_buf), 0);
+	send(sclient, sendData, sizeof(sendData), 0);
 	//char * sendData = "你好,TCP服务端，我是客户端!\n";
 	//send(sclient, sendData, strlen(sendData), 0);
 
-	char recData[2048];
-	int ret = recv(sclient, recData, sizeof(recData), 0);
+
+	int ret = recv(sclient, recvData, sizeof(recvData), 0);
 	if (ret > 0)
 	{
-		recData[ret] = 0x00;
-		printf(recData);
+		//recvData[ret] = 0x00;
+		//printf(recvData);
+		memcpy(&recvMessage, recvData, sizeof(recvData));//把接收到的信息转换成结构体
+		tempMessage = recvMessage;
+		clientPacket.analysis(&tempMessage);
 	}
 	closesocket(sclient);
 	WSACleanup();

@@ -1,16 +1,20 @@
 #include <stdio.h> /* for printf() and fprintf() */
-#include <sys/socket.h> /* for socket(), bind(), sendto()and recvfrom() */
-#include <arpa/inet.h> /* for sockaddr_in and inet_ntoa() */
 #include <stdlib.h> /* for atoi() and exit() */
 #include <string.h> /* for memset() */
-#include <unistd.h> /* for close() */
-#include <sys/socket.h>
-#include <net/if.h>
+#include <string>
+//#include <sys/socket.h>
+//#include <net/if.h>
+//#include <sys/ioctl.h>
 #include <errno.h>
-#include <sys/ioctl.h>
 #include <iostream>
 #include <time.h>
 #include <Winsock2.h>
+#include <iostream>
+#include <windef.h>                     //该头文件定义了Windows的所有数据基本型态  
+#include <Nb30.h>                   //该头文件声明了netbios的所有的函数   
+#pragma comment(lib,"ws2_32.lib")                 //连接ws2_32.lib库.只要程序中用到Winsock API 函数，都要用到 Ws2_32.lib  
+#pragma comment(lib,"netapi32.lib")               //连接Netapi32.lib库，MAC获取中用到了NetApi32.DLL的功能  
+
 #define MAX 512
 
 

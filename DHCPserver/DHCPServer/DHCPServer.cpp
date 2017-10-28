@@ -26,12 +26,13 @@ DHCPMessageStuct messageTemp;
 
 int main(int argc, char* argv[])
 {
-	DHCPMessageStuct message;
-
-	DHCPMessageStuct *DHCPMessage = &message;
-	memset(DHCPMessage, 0, sizeof(DHCPMessage));
-	memset(&messageTemp, 0, sizeof(messageTemp));
-	DHCPPackageServer serverPackage(DHCPMessage,DHCP_OFFER);
+	char sendData[4096];
+	char revData[8192];
+	DHCPMessageStuct sendMessage;
+	DHCPMessageStuct recvMessage;
+	memset(&recvMessage, 0, sizeof(recvMessage));
+	//DHCPMessageStuct *DHCPMessage = &message;
+	DHCPPackageServer serverPackage(&sendMessage,DHCP_OFFER);
 	int err;
 	socketServer serverSocket;
 	err=serverSocket.begin();
@@ -59,7 +60,6 @@ int main(int argc, char* argv[])
 	SOCKET sClient;
 	sockaddr_in remoteAddr;
 	int nAddrlen = sizeof(remoteAddr);
-	char revData[4096];
 	while (true)
 	{
 		printf("等待连接...\n");
@@ -70,20 +70,25 @@ int main(int argc, char* argv[])
 			continue;
 		}
 		printf("接受到一个连接：%s \r\n", inet_ntoa(remoteAddr.sin_addr));
-		memset(revData, 0, sizeof(revData));     //清空接收缓存
+		memset(revData, 0, sizeof(revData));     //清空缓存
+		//memset(&sendMessage, 0, sizeof(sendMessage));
+		//memset(&messageTemp, 0, sizeof(messageTemp));
+
 		//接收数据
 		int ret = recv(sClient, revData, sizeof(revData), 0);
 		if (ret > 0)
 		{
-			revData[ret] = 0x00;
+			//revData[ret] = 0x00;
 			//printf(revData);
-			memcpy(&message, revData, sizeof(revData));//把接收到的信息转换成结构体
-			messageTemp = message;
+			memcpy(&recvMessage, revData, sizeof(revData));//把接收到的信息转换成结构体
+		//	messageTemp = recvMessage;
 			serverPackage.analysis(&messageTemp);
 		}
 
 		//发送数据
-		char * sendData = "你好，TCP客户端！\n";
+		serverPackage.package(&sendMessage, DHCP_OFFER);
+		memcpy(sendData, &sendMessage, sizeof(sendMessage));//把接收到的信息转换成结构体
+		//char * sendData = "你好，TCP客户端！\n";
 		send(sClient, sendData, sizeof(sendData), 0);
 		closesocket(sClient);
 	}

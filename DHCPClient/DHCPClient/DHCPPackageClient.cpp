@@ -70,7 +70,16 @@ void DHCPPackageClient::package()
 	package(meassage, meassageType);
 }
 
-void DHCPPackageClient::addOption53()
+int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 {
-	addOption53(meassage, meassageType);
+	meassageRecv = Meassage;
+	cout << "报文类型是：";
+	printf("%d", meassageRecv->option.DHCPMeassageType);
+	cout << "可用IP地址是：" 
+		<< meassageRecv->hdr.yiaddr.seg[3]<<"."
+		<< meassageRecv->hdr.yiaddr.seg[2] << "."
+		<< meassageRecv->hdr.yiaddr.seg[1] << "."
+		<< meassageRecv->hdr.yiaddr.seg[0] << "."
+		<<endl;
+	return 0;
 }

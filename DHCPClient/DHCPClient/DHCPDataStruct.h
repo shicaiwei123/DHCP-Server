@@ -1,6 +1,10 @@
 #pragma once
 #include <iostream>
-
+using std::cout;
+using std::cin;
+using std::endl;
+#include <string>
+using std::string;
 union Address
 {
 	unsigned char seg[4]; //IP地址共4字节，或者看成无符号字符数组所指4部分
