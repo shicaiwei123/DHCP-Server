@@ -2,6 +2,7 @@
 #include <STDIO.H>
 #include "SocketClient.h"
 #include"DHCPPackageClient.h"
+#include "DataManege.h"
 #pragma comment(lib,"ws2_32.lib")
 
 
@@ -31,9 +32,11 @@ int main(int argc, char* argv[])
 	char sendData[1024];
 	char recvData[4096];
 	bool DHCPFinish = false;
+	ClientData clientData;
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
+	DataManege dataManege;
 	memset(&clientMessage, 0, sizeof(clientMessage));//初始化客户端网络数据
 
 	DHCPPackageClient packageClient(&sendMessage);
@@ -95,6 +98,8 @@ int main(int argc, char* argv[])
 			packageClient.analysis(&tempMessage);
 
 		}
+		dataManege.dataFresh(&recvMessage);
+		clientData = dataManege.getClientData();
 	DHCPFinish = packageClient.getState();
 	closesocket(sclient);
 	WSACleanup();

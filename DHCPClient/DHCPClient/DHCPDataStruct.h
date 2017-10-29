@@ -12,6 +12,7 @@ union Address
 
 };
 
+
 //基本数据结构
 //DHCP报文类型标识
 enum DHCPMmsgType {
@@ -83,4 +84,13 @@ typedef struct DHCPMessage {
 	//uint8_t option[256];
 
 }DHCPMessageStuct;
+
+//客户端信息
+struct ClientData
+{
+	Address ipAdderss;
+	Address subnetMask;
+	Address routerAddress;
+	uint8_t addressLeaseTime;
+};
 

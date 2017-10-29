@@ -29,6 +29,9 @@ int DHCPPackageServer::package(DHCPMessageStuct *Meassage, int MeassageType)
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
+		addOption1(packet, MeassageType);
+		addOption3(packet, MeassageType);
+		addOption51(packet, MeassageType);
 		addOption53(packet, MeassageType);
 		break;
 
@@ -50,6 +53,9 @@ int DHCPPackageServer::package(DHCPMessageStuct *Meassage, int MeassageType)
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
+		addOption1(packet, MeassageType);
+		addOption3(packet, MeassageType);
+		addOption51(packet, MeassageType);
 		addOption53(packet, MeassageType);
 		break;
 
@@ -78,6 +84,29 @@ int DHCPPackageServer::analysis(DHCPMessageStuct *Meassage)
 	}
 	return 0;
 }
+int DHCPPackageServer::addOption1(DHCPMessageStuct *Meassage, int MeassageType)
+{
+	DHCPMessageStuct *packet = Meassage;
+	packet->option.subnetMask = Meassage->option.subnetMask;
+	return 0;
+
+}
+
+int DHCPPackageServer::addOption3(DHCPMessageStuct *Meassage, int MeassageType)
+{
+	DHCPMessageStuct *packet = Meassage;
+	packet->option.routerAddress = Meassage->option.routerAddress;
+	return 0;
+
+}
+
+int DHCPPackageServer::addOption51(DHCPMessageStuct *Meassage, int MeassageType)
+{
+	DHCPMessageStuct *packet = Meassage;
+	packet->option.addressLeaseTime = Meassage->option.addressLeaseTime;
+	return 0;
+
+}
 
 int DHCPPackageServer::addOption53(DHCPMessageStuct *Meassage, int MeassageType)
 {
@@ -86,6 +115,7 @@ int DHCPPackageServer::addOption53(DHCPMessageStuct *Meassage, int MeassageType)
 	return 0;
 
 }
+
 
 void DHCPPackageServer::package()
 {

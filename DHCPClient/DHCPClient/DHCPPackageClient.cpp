@@ -88,6 +88,21 @@ int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 		<< (int)Meassage->hdr.yiaddr.seg[1] << "."
 		<< (int)Meassage->hdr.yiaddr.seg[0] << "."
 		<< endl;
+	cout << "掩码是："
+		<< (int)Meassage->option.subnetMask.seg[3] << "."
+		<< (int)Meassage->option.subnetMask.seg[2] << "."
+		<< (int)Meassage->option.subnetMask.seg[1] << "."
+		<< (int)Meassage->option.subnetMask.seg[0] << "."
+		<< endl;
+	cout << "网关是："
+		<< (int)Meassage->option.routerAddress.seg[3] << "."
+		<< (int)Meassage->option.routerAddress.seg[2] << "."
+		<< (int)Meassage->option.routerAddress.seg[1] << "."
+		<< (int)Meassage->option.routerAddress.seg[0] << "."
+		<< endl;
+	cout << "租借时间为："
+		<< Meassage->option.addressLeaseTime
+		<< endl;
 	if (recvMessage.option.DHCPMeassageType == DHCP_ACK)
 		DHCPFinish = true;
 	switch (recvMessage.option.DHCPMeassageType)

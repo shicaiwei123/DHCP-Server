@@ -13,7 +13,7 @@ union Address
 
 };
 
-struct IPPool
+struct IPManage
 {
 	Address ipAddress;
 	bool ipActive;

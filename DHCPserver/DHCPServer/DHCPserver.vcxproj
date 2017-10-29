@@ -157,6 +157,7 @@
     <ClCompile Include="sokectBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataManage.h" />
     <ClInclude Include="DHCPDataStruct.h" />
     <ClInclude Include="DHCPPackageBasic.h" />
     <ClInclude Include="DHCPPackageServer.h" />

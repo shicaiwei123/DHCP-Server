@@ -9,7 +9,12 @@ public:
 	int package(DHCPMessageStuct *Meassage, int MeassageType);
 	int analysis(DHCPMessageStuct *Meassage);
 	int IPDistribution(DHCPMessageStuct *Meassage);
-	int addOption53(DHCPMessageStuct *Meassage, int MeassageType);
+	int addOption1(DHCPMessageStuct *Meassage, int MeassageType); //掩码
+	int addOption3(DHCPMessageStuct *Meassage, int MeassageType); //网关
+	int addOption51(DHCPMessageStuct *Meassage, int MeassageType);//租借时间
+	int addOption53(DHCPMessageStuct *Meassage, int MeassageType);//报文类型
+
+
 	void package();
 	bool getState();
 private:
