@@ -1,11 +1,13 @@
 #pragma once
 #include"DHCPPackageBasic.h"
+#include "DataManage.h"
 
 
 class DHCPPackageServer :public DHCPPackageBasic
 {
 public:
 	DHCPPackageServer(DHCPMessageStuct *Meassage);
+	void begin();
 	int package(DHCPMessageStuct *Meassage, int MeassageType);
 	int analysis(DHCPMessageStuct *Meassage);
 	int IPDistribution(DHCPMessageStuct *Meassage);
@@ -20,6 +22,7 @@ public:
 private:
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct *testMessage;
+	DHCPMessageStuct tempMessage;
 	bool DHCPFinish;                 //≈–∂œ «∑ÒÕÍ≥…≈‰÷√°£
-
+	DataManege serverData;
 };

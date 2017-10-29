@@ -16,7 +16,8 @@ union Address
 struct IPManage
 {
 	Address ipAddress;
-	bool ipActive;
+	bool isFree;
+	int aliveTime;
 };
 
 //基本数据结构

@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
 	DHCPPackageServer packageServer(&sendMessage);
+	packageServer.begin();
 
 
 	int err;

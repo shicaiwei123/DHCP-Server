@@ -101,7 +101,7 @@ int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 		<< (int)Meassage->option.routerAddress.seg[0] << "."
 		<< endl;
 	cout << "×â½èÊ±¼äÎª£º"
-		<< Meassage->option.addressLeaseTime
+		<< (int)Meassage->option.addressLeaseTime
 		<< endl;
 	if (recvMessage.option.DHCPMeassageType == DHCP_ACK)
 		DHCPFinish = true;

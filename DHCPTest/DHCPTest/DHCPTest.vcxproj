@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2A57D895-6D94-4A04-B43A-7D856E6DA4A5}</ProjectGuid>
+    <ProjectGuid>{F2366C53-A22C-48E3-9E63-5A4BFEE876FF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DHCPserver</RootNamespace>
+    <RootNamespace>DHCPTest</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>false</SDLCheck>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,24 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DataManege.cpp" />
-    <ClCompile Include="DHCPPackageBasic.cpp" />
-    <ClCompile Include="DHCPPackageServer.cpp" />
-    <ClCompile Include="DHCPS.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="DHCPServer.cpp" />
-    <ClCompile Include="SocketServer.cpp" />
-    <ClCompile Include="sokectBasic.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DataManage.h" />
-    <ClInclude Include="DHCPDataStruct.h" />
-    <ClInclude Include="DHCPPackageBasic.h" />
-    <ClInclude Include="DHCPPackageServer.h" />
-    <ClInclude Include="SocketBasic.h" />
-    <ClInclude Include="SocketServer.h" />
+    <ClCompile Include="MACTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
