@@ -7,12 +7,15 @@ public:
 	int package(DHCPMessageStuct *Meassage, int MeassageType);
 	int addOption53(DHCPMessageStuct *Meassage, int MeassageType);
 	int analysis(DHCPMessageStuct *Meassage);
+	bool getState();
 	//重载函数，封装
-	void package(DHCPMessageStuct *Meassage);
+	void package();
 	void addOption53();
+	
 
 private:
-	DHCPMessageStuct *recvMessage;
+	DHCPMessageStuct recvMessage;
+	bool DHCPFinish;                 //判断是否完成配置。
 };
 
 

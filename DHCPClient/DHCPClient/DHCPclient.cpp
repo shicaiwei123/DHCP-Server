@@ -22,7 +22,7 @@ typedef struct send_info
 
 }send_info;
 #endif // structTest
-
+DHCPMessageStuct clientMessage;
 
 
 
@@ -30,12 +30,13 @@ int main(int argc, char* argv[])
 {
 	char sendData[1024];
 	char recvData[4096];
+	bool DHCPFinish = false;
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
+	memset(&clientMessage, 0, sizeof(clientMessage));//初始化客户端网络数据
+
 	DHCPPackageClient packageClient(&sendMessage);
-	packageClient.package(&sendMessage);
-	memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
 
 	socketClient socketClinet;
 	socketClinet.begin();
@@ -61,22 +62,40 @@ int main(int argc, char* argv[])
 	//printf("%d\n", info2.info_length);
 #endif // structTest
 	
+		//char * sendData = "你好,TCP服务端，我是客户端!\n";
+		packageClient.package(&sendMessage,DHCP_DISCOVER);
+		memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
+		send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
 
-	//char * sendData = "你好,TCP服务端，我是客户端!\n";
-	send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
 
-
-	int ret = recv(sclient, recvData, 4096, 0);
-	if (ret > 0)
-	{
-		//recvData[ret] = 0x00;
-		//printf(recvData);
-		memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
-		tempMessage = recvMessage;
-		packageClient.analysis(&tempMessage);
-
+		int ret = recv(sclient, recvData, 4096, 0);
+		if (ret > 0)
+		{
+			//recvData[ret] = 0x00;
+			//printf(recvData);
+			memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
+			tempMessage = recvMessage;
+			packageClient.analysis(&tempMessage);
 	
-	}
+		}
+
+		//Request
+		packageClient.package();
+		memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
+		send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
+
+
+		ret = recv(sclient, recvData, 4096, 0);
+		if (ret > 0)
+		{
+			//recvData[ret] = 0x00;
+			//printf(recvData);
+			memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
+			tempMessage = recvMessage;
+			packageClient.analysis(&tempMessage);
+
+		}
+	DHCPFinish = packageClient.getState();
 	closesocket(sclient);
 	WSACleanup();
 	return 0;

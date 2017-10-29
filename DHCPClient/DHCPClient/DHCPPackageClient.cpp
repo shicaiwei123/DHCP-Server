@@ -1,9 +1,10 @@
 #include "DHCPPackageClient.h"
 
-DHCPPackageClient::DHCPPackageClient(DHCPMessageStuct *Meassage)
+DHCPPackageClient::DHCPPackageClient(DHCPMessageStuct *Meassage):DHCPPackageBasic(Meassage)
 {
-	meassage = Meassage;
 	meassageType = DHCP_DISCOVER;
+	memset(&recvMessage, 0, sizeof(recvMessage));
+	DHCPFinish = false;
 }
 
 int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
@@ -65,10 +66,10 @@ int DHCPPackageClient::addOption53(DHCPMessageStuct *Meassage, int MeassageType)
 
 }
 
-void DHCPPackageClient::package(DHCPMessageStuct *Meassage)
+void DHCPPackageClient::package()
 {
 
-	package(Meassage, meassageType);
+	package(meassage, meassageType);
 }
 
 void DHCPPackageClient::addOption53()
@@ -78,14 +79,30 @@ void DHCPPackageClient::addOption53()
 
 int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 {
-	recvMessage = Meassage;
+	recvMessage = *Meassage;
 	cout << "报文类型是：";
-	printf("%d", recvMessage->option.DHCPMeassageType);
+	printf("%d\n", Meassage->option.DHCPMeassageType);
 	cout << "可用IP地址是："
-		<< (int)recvMessage->hdr.yiaddr.seg[3]  << "."
-		<< (int)recvMessage->hdr.yiaddr.seg[2]<< "."
-		<< (int)recvMessage->hdr.yiaddr.seg[1] << "."
-		<< (int)recvMessage->hdr.yiaddr.seg[0] << "."
+		<< (int)Meassage->hdr.yiaddr.seg[3]  << "."
+		<< (int)Meassage->hdr.yiaddr.seg[2]<< "."
+		<< (int)Meassage->hdr.yiaddr.seg[1] << "."
+		<< (int)Meassage->hdr.yiaddr.seg[0] << "."
 		<< endl;
+	if (recvMessage.option.DHCPMeassageType == DHCP_ACK)
+		DHCPFinish = true;
+	switch (recvMessage.option.DHCPMeassageType)
+	{
+	case DHCP_OFFER:
+		meassageType = DHCP_REQUEST;
+		break;
+	default:
+		break;
+	}
+
 	return 0;
+}
+
+bool DHCPPackageClient::getState()
+{
+	return DHCPFinish;
 }

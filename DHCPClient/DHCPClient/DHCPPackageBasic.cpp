@@ -1,10 +1,10 @@
 #include "DHCPPackageBasic.h"
 
-DHCPPackageBasic::DHCPPackageBasic()
+DHCPPackageBasic::DHCPPackageBasic(DHCPMessageStuct *Message)
 {
-
+	meassage = Message;
+	meassageType = 0;
 }
-
 
 int DHCPPackageBasic::MACAGet(char *Mac)
 {

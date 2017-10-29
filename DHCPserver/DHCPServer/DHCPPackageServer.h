@@ -11,7 +11,10 @@ public:
 	int IPDistribution(DHCPMessageStuct *Meassage);
 	int addOption53(DHCPMessageStuct *Meassage, int MeassageType);
 	void package();
+	bool getState();
 private:
 	DHCPMessageStuct recvMessage;
+	DHCPMessageStuct *testMessage;
+	bool DHCPFinish;                 //≈–∂œ «∑ÒÕÍ≥…≈‰÷√°£
 
 };
