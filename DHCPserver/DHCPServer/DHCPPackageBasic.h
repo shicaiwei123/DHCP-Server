@@ -11,7 +11,7 @@ class DHCPPackageBasic
 public:
 	DHCPPackageBasic(DHCPMessageStuct *Message);
 	int MACAGet(char *Mac);//获取本机MAC地址
-	virtual int package(DHCPMessageStuct *Meassage, int MeassageType)=0;//报文封装
+	virtual int package(DHCPMessageStuct *Meassage)=0;//报文封装
 
 protected:
 	DHCPMessageStuct *meassage;

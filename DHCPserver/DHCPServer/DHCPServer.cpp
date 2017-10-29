@@ -59,59 +59,36 @@ int main(int argc, char* argv[])
 	SOCKET slisten = serverSocket.socketGet();
 	//循环接收数据
 	SOCKET sClient;
-	sockaddr_in remoteAddr;
-	int nAddrlen = sizeof(remoteAddr);
+	//sockaddr_in remoteAddr;
+	//int nAddrlen = sizeof(remoteAddr);
 	
 	while (true)
 	{
-		printf("等待连接...\n");
- 		sClient = accept(slisten, (SOCKADDR *)&remoteAddr, &nAddrlen);
-		if (sClient == INVALID_SOCKET)
+		cout<<"等待连接...\n";
+		sClient = serverSocket.socketAccept();
+		if (sClient == -1)
 		{
-			printf("accept error !");
+			cout<<"accept error !"<<endl;
 			continue;
 		}
-		printf("接受到一个连接：%s \r\n", inet_ntoa(remoteAddr.sin_addr));
+		cout<<"接受到一个连接,标号为："<<sClient<<endl;
 	
 			//接收数据
-			memset(recvData, 0, sizeof(recvData));     //清空接收缓存
-			int ret = recv(sClient, recvData, sizeof(recvData), 0);
-			if (ret > 0)
-			{
-				//recvData[ret] = 0x00;
-				//printf(recvData);
-				memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
-				tempMessage = recvMessage;
-				packageServer.analysis(&tempMessage);
-
-			}
-			packageServer.package();
+		recvMessage = serverSocket.socketRecv(recvData, sizeof(recvData));
+		packageServer.analysis(&recvMessage);
+		packageServer.package(&sendMessage);
 			//发送数据
-			//char * sendData = "你好，TCP客户端！\n";
-
-			memcpy(sendData, &sendMessage, sizeof(sendMessage)); //结构体转换成字符串
-			send(sClient, sendData, 2048, 0);
+		serverSocket.socketSend(&sendMessage,2048);
 
 
-			//接收数据
-			memset(recvData, 0, sizeof(recvData));     //清空接收缓存
-			 ret = recv(sClient, recvData, sizeof(recvData), 0);
-			if (ret > 0)
-			{
-				//recvData[ret] = 0x00;
-				//printf(recvData);
-				memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
-				tempMessage = recvMessage;
-				packageServer.analysis(&tempMessage);
-
-			}
-			packageServer.package();
-			//发送数据
-			//char * sendData = "你好，TCP客户端！\n";
-
-			memcpy(sendData, &sendMessage, sizeof(sendMessage)); //结构体转换成字符串
-			send(sClient, sendData, 2048, 0);
-			DHCPFinish = packageServer.getState();
+		//接收数据
+		recvMessage = serverSocket.socketRecv(recvData, sizeof(recvData));
+		packageServer.analysis(&recvMessage);
+		memset(&recvMessage, 0, sizeof(DHCPMessageStuct));
+		packageServer.package(&sendMessage);
+		//发送数据
+		serverSocket.socketSend(&sendMessage, 2048);
+		DHCPFinish = packageServer.getState();
 	
 		closesocket(sClient);
 	}

@@ -64,40 +64,19 @@ int main(int argc, char* argv[])
 	//printf("%s\n", info2.info_content);
 	//printf("%d\n", info2.info_length);
 #endif // structTest
-	
-		//char * sendData = "你好,TCP服务端，我是客户端!\n";
+	//DISCOVER--OFFER
 		packageClient.package(&sendMessage,DHCP_DISCOVER);
-		memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
-		send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
-
-
-		int ret = recv(sclient, recvData, 4096, 0);
-		if (ret > 0)
-		{
-			//recvData[ret] = 0x00;
-			//printf(recvData);
-			memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
-			tempMessage = recvMessage;
-			packageClient.analysis(&tempMessage);
-	
-		}
-
-		//Request
+		socketClinet.socketSend(&sendMessage, 2048);
+		recvMessage=socketClinet.socketRecv(recvData, 4096);
+		tempMessage = recvMessage;
+		packageClient.analysis(&tempMessage);
+	//REQUEST--ACK
 		packageClient.package();
-		memcpy(sendData, &sendMessage, sizeof(DHCPMessageStuct)); //结构体转换成字符串
-		send(sclient, sendData, 2048, 0);    //方便兼容长度，字符串和后面数据的求长度函数不一样
-
-
-		ret = recv(sclient, recvData, 4096, 0);
-		if (ret > 0)
-		{
-			//recvData[ret] = 0x00;
-			//printf(recvData);
-			memcpy(&recvMessage, recvData, sizeof(recvMessage)); //结构体转换成字符串
-			tempMessage = recvMessage;
-			packageClient.analysis(&tempMessage);
-
-		}
+		socketClinet.socketSend(&sendMessage, 2048);
+		recvMessage = socketClinet.socketRecv(recvData, 4096);
+		tempMessage = recvMessage;
+		packageClient.analysis(&tempMessage);
+	//状态更新
 		dataManege.dataFresh(&recvMessage);
 		clientData = dataManege.getClientData();
 	DHCPFinish = packageClient.getState();
