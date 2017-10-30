@@ -54,7 +54,7 @@ typedef struct DHCPMsg
 	Address siaddr; // IP address of the next server to use in bootstrap
 	Address giaddr; // relay agent IP address
 
-	uint8_t chaddr[16]; // client hardware address
+	uint8_t chaddr[18]; // client hardware address
 
 	uint8_t sname[64]; // server host name
 

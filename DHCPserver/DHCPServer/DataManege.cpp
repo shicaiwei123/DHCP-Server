@@ -32,7 +32,7 @@ int DataManege::readIPPool(Address *ip)
 		if (localIPPool[i].isFree)
 		{
 			memcpy(ip, &localIPPool[i].ipAddress, sizeof(Address)); //Êý¾Ý¸³Öµ
-			localIPPool->isFree = false;
+			localIPPool[i].isFree = false;
 			j++;
 			break;
 		}

@@ -9,6 +9,7 @@ DHCPPackageClient::DHCPPackageClient(DHCPMessageStuct *Meassage):DHCPPackageBasi
 
 int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 {
+	uint8_t mac[] = "52-3B-8C-5C-72-32";//静态设置主机MAC地址用于调试。
 	DHCPMessageStuct *packet = Meassage;
 	switch (MeassageType)
 	{
@@ -24,6 +25,7 @@ int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 		packet->hdr.secs = 0x0000;
 		packet->hdr.siaddr.address = 0x00000000;
 		packet->hdr.giaddr.address = 0;
+		//memcpy(packet->hdr.chaddr, mac, 18);
 		MACAGet((char*)packet->hdr.chaddr);
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
@@ -45,6 +47,7 @@ int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 		packet->hdr.secs = 0x0000;
 		packet->hdr.siaddr.address = 0x00000000;
 		packet->hdr.giaddr.address = 0;
+		//memcpy(packet->hdr.chaddr, mac, 18);
 		MACAGet((char*)packet->hdr.chaddr);
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
@@ -81,7 +84,10 @@ int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 {
 	recvMessage = *Meassage;
 	cout << "报文类型是：";
-	printf("%d\n", Meassage->option.DHCPMeassageType);
+	if (Meassage->option.DHCPMeassageType == 2)
+		printf("OFFER\n");
+	else if (Meassage->option.DHCPMeassageType == 4)
+		printf("ACK\n");
 	cout << "可用IP地址是："
 		<< (int)Meassage->hdr.yiaddr.seg[3]  << "."
 		<< (int)Meassage->hdr.yiaddr.seg[2]<< "."

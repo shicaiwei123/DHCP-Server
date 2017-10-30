@@ -76,7 +76,10 @@ int DHCPPackageServer::analysis(DHCPMessageStuct *Meassage)
 {
 	recvMessage = *Meassage;
 	cout << "报文类型是：";
-	printf("%d\n", Meassage->option.DHCPMeassageType);
+	if (Meassage->option.DHCPMeassageType == 1)
+		printf("DISCOVER\n");
+	else if (Meassage->option.DHCPMeassageType == 3)
+		printf("REQUEST\n");
 	cout << "客户端MAC地址是：" << Meassage->hdr.chaddr<<endl;
 	switch (Meassage->option.DHCPMeassageType)  //修改状态
 	{
@@ -182,10 +185,14 @@ int DHCPPackageServer::package(DHCPMessageStuct *Message)
 
 int DHCPPackageServer::IPDistribution(DHCPMessageStuct *Meassage)
 {
-	if (!IPBuf.address)
+	if (!IPBuf.address)    //如果IP缓存为空
 		serverData.readIPPool(&Meassage->hdr.yiaddr);
 	else
+	{
 		Meassage->hdr.yiaddr.address = IPBuf.address;
+		memset(&IPBuf, 0, sizeof(Address));
+	}
+
 	//Meassage->hdr.yiaddr.seg[3] = 192;
 	//Meassage->hdr.yiaddr.seg[2] = 168;
 	//Meassage->hdr.yiaddr.seg[1] = 1;
