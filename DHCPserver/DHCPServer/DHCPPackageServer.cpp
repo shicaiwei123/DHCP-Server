@@ -8,9 +8,12 @@ DHCPPackageServer::DHCPPackageServer(DHCPMessageStuct *Meassage):DHCPPackageBasi
 	DHCPFinish = false;
 }
 
-void DHCPPackageServer::begin()
+void DHCPPackageServer::begin(uint8_t *Time)
 {
 	serverData.begin();
+	time[0] = *Time++;//时
+	time[1] = *Time++;//分
+	time[2] = *Time++;//秒
 
 }
 /*
@@ -94,34 +97,36 @@ int DHCPPackageServer::analysis(DHCPMessageStuct *Meassage)
 	}
 	return 0;
 }
-int DHCPPackageServer::addOption1(DHCPMessageStuct *Meassage, int MeassageType)
+int DHCPPackageServer::addOption1(DHCPMessageStuct *Meassage)
 {
-	DHCPMessageStuct *packet = Meassage;
-	packet->option.subnetMask = Meassage->option.subnetMask;
+	//掩码
+	Meassage->option.subnetMask.seg[3] = 255; Meassage->option.subnetMask.seg[2] = 255;
+	Meassage->option.subnetMask.seg[1] = 255; Meassage->option.subnetMask.seg[0] = 0;
 	return 0;
 
 }
 
-int DHCPPackageServer::addOption3(DHCPMessageStuct *Meassage, int MeassageType)
+int DHCPPackageServer::addOption3(DHCPMessageStuct *Meassage)
 {
-	DHCPMessageStuct *packet = Meassage;
-	packet->option.routerAddress = Meassage->option.routerAddress;
+	//网关
+	Meassage->option.routerAddress.seg[3] = 192; Meassage->option.routerAddress.seg[2] = 168;
+	Meassage->option.routerAddress.seg[1] = 1; Meassage->option.routerAddress.seg[0] = 1;
 	return 0;
 
 }
 
-int DHCPPackageServer::addOption51(DHCPMessageStuct *Meassage, int MeassageType)
+int DHCPPackageServer::addOption51(DHCPMessageStuct *Meassage, uint8_t *Time)
 {
 	DHCPMessageStuct *packet = Meassage;
-	packet->option.addressLeaseTime = Meassage->option.addressLeaseTime;
+	memcpy(packet->option.addressLeaseTime, Time, 3*sizeof(uint8_t));
 	return 0;
 
 }
 
-int DHCPPackageServer::addOption53(DHCPMessageStuct *Meassage, int MeassageType)
+int DHCPPackageServer::addOption53(DHCPMessageStuct *Meassage)
 {
 	DHCPMessageStuct *packet = Meassage;
-	packet->option.DHCPMeassageType = MeassageType;
+	packet->option.DHCPMeassageType = meassageType;
 	return 0;
 
 }
@@ -149,7 +154,10 @@ int DHCPPackageServer::package(DHCPMessageStuct *Message)
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
-		addOption53(packet, meassageType);
+		addOption1(packet);
+		addOption3(packet);
+		addOption51(packet,time);
+		addOption53(packet);
 		IPBuf.address = packet->hdr.yiaddr.address;
 		break;
 
@@ -172,7 +180,10 @@ int DHCPPackageServer::package(DHCPMessageStuct *Message)
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
-		addOption53(packet, meassageType);
+		addOption1(packet);
+		addOption3(packet);
+		addOption51(packet, time);
+		addOption53(packet);
 		DHCPFinish = true;
 		break;
 
@@ -185,23 +196,22 @@ int DHCPPackageServer::package(DHCPMessageStuct *Message)
 
 int DHCPPackageServer::IPDistribution(DHCPMessageStuct *Meassage)
 {
+	int flag = 0;
+	StaticIPManege *a = serverData.getIPdata();
 	if (!IPBuf.address)    //如果IP缓存为空
-		serverData.readIPPool(&Meassage->hdr.yiaddr);
+	{
+		flag = serverData.readStaticIPPool(&Meassage->hdr.yiaddr,(char*)(&recvMessage.hdr.chaddr));
+		StaticIPManege *a = serverData.getIPdata();
+		if (flag == -1)//静态表没有记录
+			serverData.readDynamicIPPool(&Meassage->hdr.yiaddr);
+	}
+
 	else
 	{
 		Meassage->hdr.yiaddr.address = IPBuf.address;
 		memset(&IPBuf, 0, sizeof(Address));
 	}
 
-	//Meassage->hdr.yiaddr.seg[3] = 192;
-	//Meassage->hdr.yiaddr.seg[2] = 168;
-	//Meassage->hdr.yiaddr.seg[1] = 1;
-	//Meassage->hdr.yiaddr.seg[0] = 0;
-	Meassage->option.addressLeaseTime = 12;
-	Meassage->option.subnetMask.seg[3] = 255;Meassage->option.subnetMask.seg[2] = 255;
-	Meassage->option.subnetMask.seg[1] = 255;Meassage->option.subnetMask.seg[0] = 0;
-	Meassage->option.routerAddress.seg[3] = 192;Meassage->option.routerAddress.seg[2] = 168;
-	Meassage->option.routerAddress.seg[1] = 1; Meassage->option.routerAddress.seg[0] = 1;
 	return 0;
 
 }
@@ -209,4 +219,9 @@ int DHCPPackageServer::IPDistribution(DHCPMessageStuct *Meassage)
 bool DHCPPackageServer::getState()
 {
 	return DHCPFinish;
+}
+
+DHCPMessageStuct DHCPPackageServer::getRecvMessage()
+{
+	return recvMessage;
 }

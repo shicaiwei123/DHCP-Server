@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 		tempMessage = recvMessage;
 		packageClient.analysis(&tempMessage);
 	//REQUEST--ACK
-		packageClient.package();
+flag1:	packageClient.package();
 		socketClinet.socketSend(&sendMessage, 2048);
 		recvMessage = socketClinet.socketRecv(recvData, 4096);
 		tempMessage = recvMessage;
@@ -79,7 +79,9 @@ int main(int argc, char* argv[])
 	//×´Ì¬¸üÐÂ
 		dataManege.dataFresh(&recvMessage);
 		clientData = dataManege.getClientData();
-	DHCPFinish = packageClient.getState();
+		DHCPFinish = packageClient.getState();
+		if (dataManege.startCounter())
+			goto flag1;
 	closesocket(sclient);
 	WSACleanup();
 	return 0;

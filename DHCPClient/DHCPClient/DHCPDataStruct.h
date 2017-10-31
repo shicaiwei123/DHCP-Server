@@ -68,7 +68,7 @@ typedef struct DHCPOption
 	uint8_t DHCPMeassageType;
 	Address subnetMask;
 	Address routerAddress;
-	uint8_t addressLeaseTime;
+	uint8_t addressLeaseTime[3];
 	Address DNSServer;
 	Address broadcastAdress;
 
@@ -91,6 +91,6 @@ struct ClientData
 	Address ipAdderss;
 	Address subnetMask;
 	Address routerAddress;
-	uint8_t addressLeaseTime;
+	uint8_t addressLeaseTime[3];
 };
 

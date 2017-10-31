@@ -5,6 +5,7 @@
 #include <memory.h>
 #include "SocketServer.h"
 #include"DHCPPackageServer.h"
+#include "TimeCounter.h"
 #pragma comment(lib,"ws2_32.lib")
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
@@ -24,6 +25,7 @@
 
 int main(int argc, char* argv[])
 {
+	uint8_t time[3] = {0,1,0};
 	bool DHCPFinish = false;
 	char recvData[4096];
 	char sendData[2048];
@@ -31,7 +33,9 @@ int main(int argc, char* argv[])
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
 	DHCPPackageServer packageServer(&sendMessage);
-	packageServer.begin();
+	packageServer.begin(time);
+	Clock clock;
+	clock.set(0, 1, 0);//初始化定时器为1分钟
 
 
 	int err;
@@ -79,9 +83,16 @@ int main(int argc, char* argv[])
 		packageServer.package(&sendMessage);
 			//发送数据
 		serverSocket.socketSend(&sendMessage,2048);
-
+		DHCPFinish = packageServer.getState();
+		if (DHCPFinish)//如果完成了配置那么就重置定时器
+		{
+			clock.set(0, 1, 0);
+			clock.run();//发送ACK后开启定时器
+			break;
+		}
 
 		//接收数据
+
 		recvMessage = serverSocket.socketRecv(recvData, sizeof(recvData));
 		packageServer.analysis(&recvMessage);
 		memset(&recvMessage, 0, sizeof(DHCPMessageStuct));
@@ -89,8 +100,14 @@ int main(int argc, char* argv[])
 		//发送数据
 		serverSocket.socketSend(&sendMessage, 2048);
 		DHCPFinish = packageServer.getState();
-	
+		if (DHCPFinish)//如果完成了配置那么就重置定时器
+		{
+			clock.set(0, 1, 0);
+			clock.run();//发送ACK后开启定时器
+		}
 		closesocket(sClient);
+
+	
 	}
 	closesocket(slisten);
 	WSACleanup();

@@ -26,7 +26,7 @@ int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 		packet->hdr.siaddr.address = 0x00000000;
 		packet->hdr.giaddr.address = 0;
 		//memcpy(packet->hdr.chaddr, mac, 18);
-		MACAGet((char*)packet->hdr.chaddr);
+		MACAGet((char*)packet->hdr.chaddr);//获取本机MAC地址
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
@@ -107,7 +107,9 @@ int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 		<< (int)Meassage->option.routerAddress.seg[0] << "."
 		<< endl;
 	cout << "租借时间为："
-		<< (int)Meassage->option.addressLeaseTime
+		<< (int)Meassage->option.addressLeaseTime[0]<<":"
+		<< (int)Meassage->option.addressLeaseTime[1]<< ":"
+		<< (int)Meassage->option.addressLeaseTime[2]<< ":"
 		<< endl;
 	if (recvMessage.option.DHCPMeassageType == DHCP_ACK)
 		DHCPFinish = true;
@@ -116,6 +118,8 @@ int DHCPPackageClient::analysis(DHCPMessageStuct *Meassage)
 	case DHCP_OFFER:
 		meassageType = DHCP_REQUEST;
 		break;
+	case DHCP_ACK:
+		meassageType = DHCP_REQUEST;
 	default:
 		break;
 	}

@@ -156,6 +156,7 @@
     <ClCompile Include="DHCPServer.cpp" />
     <ClCompile Include="SocketServer.cpp" />
     <ClCompile Include="sokectBasic.cpp" />
+    <ClCompile Include="TimeCounter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataManage.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="DHCPPackageServer.h" />
     <ClInclude Include="SocketBasic.h" />
     <ClInclude Include="SocketServer.h" />
+    <ClInclude Include="TimeCounter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

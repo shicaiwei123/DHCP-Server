@@ -7,7 +7,7 @@ DataManege::DataManege()
 
 int DataManege::dataFresh(DHCPMessageStuct *recvMessage)
 {
-	clientData.addressLeaseTime = recvMessage->option.addressLeaseTime;
+	memcpy(clientData.addressLeaseTime, recvMessage->option.addressLeaseTime, sizeof(recvMessage->option.addressLeaseTime));
 	clientData.ipAdderss = recvMessage->hdr.yiaddr;
 	clientData.routerAddress = recvMessage->option.routerAddress;
 	clientData.subnetMask = recvMessage->option.subnetMask;
@@ -17,4 +17,11 @@ int DataManege::dataFresh(DHCPMessageStuct *recvMessage)
 ClientData DataManege::getClientData()
 {
 	return clientData;
+}
+
+int DataManege::startCounter()
+{
+	clock.set(clientData.addressLeaseTime[0], clientData.addressLeaseTime[1], clientData.addressLeaseTime[2]);
+	if (clock.run() == 1)//如果时间过半
+		return 1;
 }

@@ -36,6 +36,9 @@
     <ClCompile Include="DataManagecpp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TimeCounter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SocketBasic.h">
@@ -54,6 +57,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DataManege.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeCounter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
