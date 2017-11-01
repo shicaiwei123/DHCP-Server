@@ -146,9 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\DHCPC.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="DataManagecpp.cpp" />
     <ClCompile Include="DHCPclient.cpp" />
     <ClCompile Include="DHCPPackageBasic.cpp" />

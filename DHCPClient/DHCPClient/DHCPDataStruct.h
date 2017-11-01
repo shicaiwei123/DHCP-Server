@@ -1,10 +1,13 @@
 #pragma once
+/*数据结构头文件*/
+//包含了所有用到的数据结构和数据的定义
 #include<iostream>
 #include <iomanip>
 using std::cout;
 using std::cin;
 using std::endl;
 
+//地址
 union Address
 {
 	unsigned char seg[4]; //IP地址共4字节，或者看成无符号字符数组所指4部分

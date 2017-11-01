@@ -10,9 +10,8 @@
 #define UDP IPPROTO_UDP
 const char ip[] = {"127.0.0.1" };
 
-//#define structTest
-
 //结构体传输测试
+//#define structTest
 #ifdef structTest
 typedef struct send_info
 {
@@ -36,15 +35,16 @@ int main(int argc, char* argv[])
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
-	DataManege dataManege;
+	DataManege dataManege;                            //例化数据管理类
 	memset(&clientMessage, 0, sizeof(clientMessage));//初始化客户端网络数据
 
-	DHCPPackageClient packageClient(&sendMessage);
+	DHCPPackageClient packageClient(&sendMessage);  //例化数据处理类
 
-	socketClient socketClinet;
+	socketClient socketClinet;                     //例化连接建立维护类
 	socketClinet.begin();
 	socketClinet.socketCreate(TCP);
 	socketClinet.socketConnect(ip, 8888);
+flag1:
 	SOCKET sclient = socketClinet.socketGet();
 #ifdef structTest
 		send_info info1 = {"client","server","你好啊，李银河",15}; //定义结构体变量
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 		tempMessage = recvMessage;
 		packageClient.analysis(&tempMessage);
 	//REQUEST--ACK
-flag1:	packageClient.package();
+		packageClient.package();
 		socketClinet.socketSend(&sendMessage, 2048);
 		recvMessage = socketClinet.socketRecv(recvData, 4096);
 		tempMessage = recvMessage;
@@ -80,8 +80,12 @@ flag1:	packageClient.package();
 		dataManege.dataFresh(&recvMessage);
 		clientData = dataManege.getClientData();
 		DHCPFinish = packageClient.getState();
-		if (dataManege.startCounter())
-			goto flag1;
+		//if (dataManege.startCounter() == 1)//开启定时器
+		//{
+		//	cout << "重新续约" << endl;
+		//	goto flag1;
+		//}
+
 	closesocket(sclient);
 	WSACleanup();
 	return 0;

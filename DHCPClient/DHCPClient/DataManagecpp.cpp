@@ -21,7 +21,9 @@ ClientData DataManege::getClientData()
 
 int DataManege::startCounter()
 {
+	int flag;
 	clock.set(clientData.addressLeaseTime[0], clientData.addressLeaseTime[1], clientData.addressLeaseTime[2]);
-	if (clock.run() == 1)//如果时间过半
+	flag = clock.run();
+	if (flag== 1)//如果时间过半
 		return 1;
 }

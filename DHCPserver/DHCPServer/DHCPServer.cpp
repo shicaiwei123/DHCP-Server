@@ -84,12 +84,12 @@ int main(int argc, char* argv[])
 			//发送数据
 		serverSocket.socketSend(&sendMessage,2048);
 		DHCPFinish = packageServer.getState();
-		if (DHCPFinish)//如果完成了配置那么就重置定时器
-		{
-			clock.set(0, 1, 0);
-			clock.run();//发送ACK后开启定时器
-			break;
-		}
+		//if (DHCPFinish)//如果完成了配置那么就重置定时器
+		//{
+		//	clock.set(0, 1, 0);
+		//	clock.run();//发送ACK后开启定时器
+		//	break;
+		//}
 
 		//接收数据
 
@@ -100,11 +100,11 @@ int main(int argc, char* argv[])
 		//发送数据
 		serverSocket.socketSend(&sendMessage, 2048);
 		DHCPFinish = packageServer.getState();
-		if (DHCPFinish)//如果完成了配置那么就重置定时器
-		{
-			clock.set(0, 1, 0);
-			clock.run();//发送ACK后开启定时器
-		}
+		//if (DHCPFinish)//如果完成了配置那么就重置定时器
+		//{
+		//	clock.set(0, 1, 0);
+		//	clock.run();//发送ACK后开启定时器
+		//}
 		closesocket(sClient);
 
 	

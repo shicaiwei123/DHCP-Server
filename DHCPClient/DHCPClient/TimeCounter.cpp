@@ -35,6 +35,7 @@ int Clock::run()
 	while (h != 0 || m != 0 || s != 0) {
 		if (h == 0 && m == 0&&s== 30)//仅仅只是测试
 		{
+			cout << endl;
 			cout << "时间过半"<<endl;
 			return 1;
 		}

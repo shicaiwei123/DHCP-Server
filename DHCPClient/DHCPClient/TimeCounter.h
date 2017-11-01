@@ -1,4 +1,5 @@
 #pragma once
+//定时器类，设置和开启定时器
 #include<ctime>  
 #include<iostream>  
 using std::cout;

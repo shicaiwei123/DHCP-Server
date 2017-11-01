@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\DHCPC.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="DHCPclient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

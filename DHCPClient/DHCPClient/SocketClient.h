@@ -1,4 +1,7 @@
 #pragma once
+//继承socket基类，结合客户端需求，增加了一些方法
+//连接建立
+//报文收发
 #include "SocketBasic.h"
 #include "DHCPDataStruct.h"
 class socketClient :public socketBasic
