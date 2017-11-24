@@ -7,6 +7,14 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+
+//信息验证
+union VerifictionData
+{
+	char question[7];
+	char answer[7];
+};
+
 //地址存储
 union Address
 {

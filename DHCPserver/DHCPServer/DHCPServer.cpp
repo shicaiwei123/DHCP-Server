@@ -6,6 +6,7 @@
 #include "SocketServer.h"
 #include"DHCPPackageServer.h"
 #include "TimeCounter.h"
+#include "Verification.h"
 #pragma comment(lib,"ws2_32.lib")
 #define TCP IPPROTO_TCP
 #define UDP IPPROTO_UDP
@@ -29,15 +30,19 @@ int main(int argc, char* argv[])
 	bool DHCPFinish = false;
 	char recvData[4096];
 	char sendData[2048];
+	VerifictionData VerifictionDataServer;
+	Verifiction VerifictionServer;
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
 	DHCPMessageStuct tempMessage;
 	DHCPPackageServer packageServer(&sendMessage);
 	packageServer.begin(time);
+	VerifictionServer.begin();
 	Clock clock;
 	clock.set(0, 1, 0);//初始化定时器为1分钟
-
-
+	memcpy(VerifictionDataServer.question, "ABCDEF", 7);
+	memcpy(VerifictionDataServer.answer, "ABCDEF", 7);
+	int VerFlag = 0;
 	int err;
 	socketServer serverSocket;
 	err=serverSocket.begin();
@@ -97,7 +102,15 @@ int main(int argc, char* argv[])
 		packageServer.analysis(&recvMessage);
 		memset(&recvMessage, 0, sizeof(DHCPMessageStuct));
 		packageServer.package(&sendMessage);
-		//发送数据
+		while (!VerFlag)
+		{
+			//发送数据
+			VerifictionServer.sendQuestiooon(slisten, VerifictionDataServer.question, VerifictionDataServer.answer);
+
+			//接收验证
+			VerFlag = VerifictionServer.ckeck(slisten);
+		}
+
 		serverSocket.socketSend(&sendMessage, 2048);
 		DHCPFinish = packageServer.getState();
 		//if (DHCPFinish)//如果完成了配置那么就重置定时器

@@ -339,10 +339,9 @@ void Clock::run()
 }
 int main()
 {
-	Clock c;
-	cout << "请输入倒计时的时间：";
-	int h1, m1, s1;
-	cin >> h1 >> m1 >> s1;
-	c.set(h1, m1, s1);
-	c.run();
+	char a[7];
+	cin >> a;
+	cout << a;
+	return 0;
+
 }

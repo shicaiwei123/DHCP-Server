@@ -153,6 +153,7 @@
     <ClCompile Include="SocketClient.cpp" />
     <ClCompile Include="sokecBasis.cpp" />
     <ClCompile Include="TimeCounter.cpp" />
+    <ClCompile Include="Verifiction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataManege.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="SocketBasic.h" />
     <ClInclude Include="SocketClient.h" />
     <ClInclude Include="TimeCounter.h" />
+    <ClInclude Include="Verification.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

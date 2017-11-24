@@ -36,15 +36,15 @@
     <ClCompile Include="TimeCounter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Verifiction.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SocketBasic.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SocketClient.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DHCPDataStruct.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DHCPPackageBasic.h">
@@ -57,6 +57,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TimeCounter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DHCPDataStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Verification.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
