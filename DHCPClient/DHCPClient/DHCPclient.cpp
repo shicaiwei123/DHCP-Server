@@ -3,6 +3,7 @@
 #include "SocketClient.h"
 #include"DHCPPackageClient.h"
 #include "DataManege.h"
+#include "Verification.h"
 #pragma comment(lib,"ws2_32.lib")
 
 
@@ -31,6 +32,7 @@ int main(int argc, char* argv[])
 	char sendData[1024];
 	char recvData[4096];
 	bool DHCPFinish = false;
+	bool verPass = false;
 	ClientData clientData;
 	DHCPMessageStuct sendMessage;
 	DHCPMessageStuct recvMessage;
@@ -41,10 +43,12 @@ int main(int argc, char* argv[])
 	DHCPPackageClient packageClient(&sendMessage);  //例化数据处理类
 
 	socketClient socketClinet;                     //例化连接建立维护类
+	Verifiction VerifictionClient;
+	VerifictionClient.begin();
 	socketClinet.begin();
 	socketClinet.socketCreate(TCP);
 	socketClinet.socketConnect(ip, 8888);
-flag1:
+
 	SOCKET sclient = socketClinet.socketGet();
 #ifdef structTest
 		send_info info1 = {"client","server","你好啊，李银河",15}; //定义结构体变量
@@ -64,12 +68,25 @@ flag1:
 	//printf("%s\n", info2.info_content);
 	//printf("%d\n", info2.info_length);
 #endif // structTest
+	//信息验证
+	while (!verPass)
+	{
+		VerifictionClient.recvQuestion(sclient);
+		VerifictionClient.sendAnswer(sclient);
+		verPass = VerifictionClient.ckeck(sclient);
+		if (verPass)
+			cout << "验证成功" << endl;
+	}
+
+
+
 	//DISCOVER--OFFER
 		packageClient.package(&sendMessage,DHCP_DISCOVER);
 		socketClinet.socketSend(&sendMessage, 2048);
 		recvMessage=socketClinet.socketRecv(recvData, 4096);
 		tempMessage = recvMessage;
 		packageClient.analysis(&tempMessage);
+flag1:
 	//REQUEST--ACK
 		packageClient.package();
 		socketClinet.socketSend(&sendMessage, 2048);
@@ -80,11 +97,11 @@ flag1:
 		dataManege.dataFresh(&recvMessage);
 		clientData = dataManege.getClientData();
 		DHCPFinish = packageClient.getState();
-		//if (dataManege.startCounter() == 1)//开启定时器
-		//{
-		//	cout << "重新续约" << endl;
-		//	goto flag1;
-		//}
+		if (dataManege.startCounter() == 1)//开启定时器
+		{
+			cout << "重新续约" << endl;
+			goto flag1;
+		}
 
 	closesocket(sclient);
 	WSACleanup();

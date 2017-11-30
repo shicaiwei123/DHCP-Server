@@ -25,8 +25,8 @@ int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 		packet->hdr.secs = 0x0000;
 		packet->hdr.siaddr.address = 0x00000000;
 		packet->hdr.giaddr.address = 0;
-		//memcpy(packet->hdr.chaddr, mac, 18);
-		MACAGet((char*)packet->hdr.chaddr);//获取本机MAC地址
+		memcpy(packet->hdr.chaddr, mac, 18);
+		//MACAGet((char*)packet->hdr.chaddr);//获取本机MAC地址
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;
@@ -47,8 +47,8 @@ int DHCPPackageClient::package(DHCPMessageStuct *Meassage, int MeassageType)
 		packet->hdr.secs = 0x0000;
 		packet->hdr.siaddr.address = 0x00000000;
 		packet->hdr.giaddr.address = 0;
-		//memcpy(packet->hdr.chaddr, mac, 18);
-		MACAGet((char*)packet->hdr.chaddr);
+		memcpy(packet->hdr.chaddr, mac, 18);
+		//MACAGet((char*)packet->hdr.chaddr);
 		memset(packet->hdr.sname, 0, sizeof(packet->hdr.sname));
 		memset(packet->hdr.file, 0, sizeof(packet->hdr.file));
 		packet->hdr.dhcp_magic = 0x63538263;

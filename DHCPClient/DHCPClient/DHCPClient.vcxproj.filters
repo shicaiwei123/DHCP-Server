@@ -47,6 +47,9 @@
     <ClInclude Include="SocketClient.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DHCPDataStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="DHCPPackageBasic.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -57,9 +60,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TimeCounter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DHCPDataStruct.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Verification.h">

@@ -6,14 +6,13 @@ class Verifiction
 {
 public:
 	Verifiction();
-	void begin();
-	int sendQuestiooon(SOCKET s, char *question, char *answer);
+	void begin(char *question, char *answer);
+	int sendQuestiooon(SOCKET s);
 	bool ckeck(SOCKET s);
 
 private:
 	VerifictionData VerifictionServer;
 	char sendData[1024];
 	char recvData[2048];
-	int answerLen;
 
 };

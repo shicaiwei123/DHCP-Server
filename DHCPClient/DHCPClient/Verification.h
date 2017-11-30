@@ -8,14 +8,13 @@ public:
 	Verifiction();
 	void begin();
 	int recvQuestion(SOCKET s);
-	int sendAnwser(SOCKET s);
+	bool sendAnswer(SOCKET s);
+	bool ckeck(SOCKET s);
 
 private:
 	VerifictionData VerifictionClient;
 	char sendData[1024];
 	char recvData[2048];
-	int answerLen;
-	char question[7];
-	char answer[7];
+	int verPass;
 
 };

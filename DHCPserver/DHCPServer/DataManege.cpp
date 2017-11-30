@@ -11,26 +11,17 @@ DataManege::DataManege()
 
 void DataManege::begin()
 {
-	//char mac1[] = "30-52-CB-61-90-6F";
-	//char mac2[] = "10-52-CB-61-90-6F";
-	//char mac3[] = "20-22-CB-61-90-6F";
-	//char mac4[] = "40-52-EB-61-90-6F";
-	//char mac5[] = "50-52-CB-41-90-6F";
-	//char mac6[] = "60-52-CB-61-50-6F";
-	//char mac7[] = "70-52-CB-61-90-7F";
-	//char mac8[] = "30-52-CB-61-80-6F";
-	//char mac9[] = "30-52-CB-91-90-6F";
-	//char mac10[] = "30-52-CB-61-90-6F";
+	counter = sizeof(dynamicIPPool) / sizeof(DynamicIPManage);
 
 	//192.168.1.3--192.168.1.12，动态IP池初始化
-	for (int i = 0; i < sizeof(dynamicIPPool)/sizeof(DynamicIPManage);i++)
+	for (int i = 0; i < sizeof(dynamicIPPool) / sizeof(DynamicIPManage); i++)
 	{
 		dynamicIPPool[i].ipAddress.seg[3] = 192;	dynamicIPPool[i].ipAddress.seg[2] = 168;
-		dynamicIPPool[i].ipAddress.seg[1] = 1;   dynamicIPPool[i].ipAddress.seg[0] = 3+i;
+		dynamicIPPool[i].ipAddress.seg[1] = 1;   dynamicIPPool[i].ipAddress.seg[0] = 3 + i;
 		dynamicIPPool[i].isFree = true;
 	}
 	//静态IP池初始化
-	for (int i = 0; i < sizeof(staticIPPool) / sizeof(StaticIPManege); i++)
+	for (int i = 0; i < sizeof(dynamicIPPool) / sizeof(DynamicIPManage); i++)
 	{
 		staticIPPool[i].IPData.ipAddress.seg[3] = 192;
 		staticIPPool[i].IPData.ipAddress.seg[2] = 168;
@@ -52,12 +43,51 @@ void DataManege::begin()
 
 
 }
-
-void DataManege::importData(DynamicIPManage *IPData)
+void DataManege::reflash(Address *Ip, char *Mac)
 {
-	IPPool = IPData;
-	flag = true;
+	bool repeat = false;
+	for (int i = 0; i < counter;i++)
+	{
+		int equel = 0;
+		equel=strcmp((const char*)staticIPPool[counter].MAC, Mac);
+		if (equel)//如果不相等相等
+		{
+			 repeat = true;
+			break;
+
+		}
+	}
+
+	if (repeat)
+	{
+		counter = counter + 1;
+		staticIPPool[counter].IPData.ipAddress.address = Ip->address;
+		memcpy(staticIPPool[counter].MAC, Mac, 18);
+		staticIPPool[counter].IPData.isFree = true;
+	}
+
 }
+
+void DataManege::reflash(char *Mac)
+{
+	for (int i = 0; i < counter; i++)
+		if (!strcmp((const char*)staticIPPool[counter].MAC, Mac))//如果相等
+		{
+			staticIPPool[i].IPData.isFree = true;
+		}
+}
+//DataManege::dynamicIPPool[1].isFree = false;
+//void DataManege::getData(DynamicIPManage *DynamicIPPool, StaticIPManege *StaticIPPool)
+//{
+//	DynamicIPPool = this->dynamicIPPool;
+//	StaticIPPool = this->staticIPPool;
+//}
+//void DataManege::importData(DynamicIPManage *DynamicIPPool, StaticIPManege *StaticIPPool)
+//{
+//	dynamicIPPool = DynamicIPPool;
+//	staticIPPool = StaticIPPool;
+//
+//}
 int DataManege::readDynamicIPPool(Address *ip)
 {
 	int j=0;
@@ -84,7 +114,7 @@ int DataManege::readStaticIPPool(Address *Ip, char *Mac)
 			flag = strcmp((char*)staticIPPool[i].MAC, Mac);
 			if (!flag)//如果匹配到
 			{
-				Ip->address = staticIPPool->IPData.ipAddress.address;
+				Ip->address = staticIPPool[i].IPData.ipAddress.address;
 				return 0;
 			}
 		

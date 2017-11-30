@@ -58,3 +58,9 @@ int socketServer::socketSend(DHCPMessageStuct *SendMessage,int Length)
 
 		return 0;
 }
+
+
+void socketServer::socketSet(SOCKET S)
+{
+	recvSocket = S;
+}

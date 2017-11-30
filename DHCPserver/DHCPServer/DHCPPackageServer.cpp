@@ -8,13 +8,33 @@ DHCPPackageServer::DHCPPackageServer(DHCPMessageStuct *Meassage):DHCPPackageBasi
 	DHCPFinish = false;
 }
 
-void DHCPPackageServer::begin(uint8_t *Time)
+void DHCPPackageServer::begin()
 {
-	serverData.begin();
-	time[0] = *Time++;//时
-	time[1] = *Time++;//分
-	time[2] = *Time++;//秒
+	//serverData.begin();
 
+	time[0] = 0;//时
+	time[1] = 1;//分
+	time[2] = 0;//秒
+
+}
+
+void DHCPPackageServer::setTime(uint8_t *Time)
+{
+	time[0] = *Time++;
+	time[1] = *Time++;
+	time[2] = *Time++;
+
+}
+//void DHCPPackageServer::begin(DynamicIPManage *DynamicIPPool, StaticIPManege *StaticIPPool)
+//{
+//	serverData.importData(DynamicIPPool, StaticIPPool);
+//}
+
+
+int DHCPPackageServer::setData(DataManege *ServerData)
+{
+	serverData = ServerData;
+	return 0;
 }
 /*
 int DHCPPackageServer::package(DHCPMessageStuct *Meassage, int MeassageType)
@@ -197,13 +217,13 @@ int DHCPPackageServer::package(DHCPMessageStuct *Message)
 int DHCPPackageServer::IPDistribution(DHCPMessageStuct *Meassage)
 {
 	int flag = 0;
-	StaticIPManege *a = serverData.getIPdata();
+	StaticIPManege *a = serverData->getIPdata();
 	if (!IPBuf.address)    //如果IP缓存为空
 	{
-		flag = serverData.readStaticIPPool(&Meassage->hdr.yiaddr,(char*)(&recvMessage.hdr.chaddr));
-		StaticIPManege *a = serverData.getIPdata();
+		flag = serverData->readStaticIPPool(&Meassage->hdr.yiaddr,(char*)(&recvMessage.hdr.chaddr));
+		StaticIPManege *a = serverData->getIPdata();
 		if (flag == -1)//静态表没有记录
-			serverData.readDynamicIPPool(&Meassage->hdr.yiaddr);
+			serverData->readDynamicIPPool(&Meassage->hdr.yiaddr);
 	}
 
 	else
@@ -211,7 +231,7 @@ int DHCPPackageServer::IPDistribution(DHCPMessageStuct *Meassage)
 		Meassage->hdr.yiaddr.address = IPBuf.address;
 		memset(&IPBuf, 0, sizeof(Address));
 	}
-
+	serverData->reflash(&Meassage->hdr.yiaddr, (char*)(&recvMessage.hdr.chaddr));
 	return 0;
 
 }
@@ -224,4 +244,9 @@ bool DHCPPackageServer::getState()
 DHCPMessageStuct DHCPPackageServer::getRecvMessage()
 {
 	return recvMessage;
+}
+
+void DHCPPackageServer::reflash()
+{
+	serverData->reflash((char*)(&recvMessage.hdr.chaddr));
 }
